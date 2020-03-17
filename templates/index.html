@@ -1,91 +1,64 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    
     <title>Sample</title>
   </head>
   <body>
     <div class="container">
       <!-- Content here -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="text-center mt-2 alert alert-{{ category }} alert-dismissible animated fadeIn" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <!-- <strong>Title</strong> --> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
       <div class="row mt-3">
         <h1 class="display-4">불법 저작물 탐지 시스템</h1>
       </div>
 
-      <div class="mt-3">
-        <div class="row">
-          <div class="col">
-            <button type="button" class="btn btn-outline-primary btn-sm">Crawling</button>
-          </div>
-          <div class="col">
-            <select class="form-control form-control-sm">
-              <option selected disabled>분석방법</option>
-              <option value="1">게시글 기반 검색(simhash)</option>
-              <option value="2">키워드 기반 검색(noise)</option>
-            </select>
-          </div>
-          <div>
-            <input type="file" class="form-control-file" id="">
-          </div>
-          <div class="col">
-            
-          </div>
-          <button id="analysis" type="button" class="col btn btn-outline-primary btn-sm">분석</button>
+      <div class="row mt-3">
+        <div class="col">
+          <button type="button" class="btn btn-outline-primary">Crawling</button>
+        </div>
+      </div>
+      <form class="form-row mt-3" action="/GetData" method="POST">
+        <div class="col">
+          <select name="means" class="form-control" required>
+            <option selected disabled value="">분석방법</option>
+            <option value="1">게시글 기반 검색(simhash)</option>
+            <option value="2">키워드 기반 검색(noise)</option>
+          </select>
         </div>
 
-        <script>
-          $('#analysis').click(function(){
-            if(1){
-              $.ajax({
-                type:'post',
-                contentType: 'application/x-www-form-urlencoded;charset=euc-kr',
-                dataType:'json',
-                data:{
-                  crawling: $('#crawling').val(),
-                  copyright: $('#copyright').val(),
-                  search: $('#search').val()
-                },
-                url:'/getJson',
-              }).done(function(res){
-                var html = '<table class="table table-striped text-center" style="overflow:auto">';
-                html += '<tr>';
-                var flag = 0;
-                $.each(res[0], function(index, value){
-                    html += '<th>'+index+'</th>';
-                });
-                html += '</tr>';
-                $.each(res, function(index, value){
-                    html += '<tr>';
-                    $.each(value, function(index2, value2){
-                        html += '<td>'+value2+'</td>';
-                    });
-                    html += '<tr>';
-                });
-                html += '</table>';
-                $('#show').html(html);
-              });
-            }
-          });
-        </script>
-        <div class="row">
-          <input id="search" type="text" class="form-control form-control-sm mt-3">
+        <div class="col">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file...</label>
+          </div>
         </div>
-        <script>
-          $(document).ready(function(){
-            $("#search").on("keyup", function() {
-              var value = $(this).val().toLowerCase();
-              $("#show table tbody tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-              });
-            });
-          });
-        </script>
+
+        <div class="col">
+          <input name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색">
+        </div>
+
+        <div class="col">
+          <button id="analysis" type="submit" class="btn btn-outline-primary">분석</button>  
+        </div>
+      </form>
+
+      <div class="row">
+        <input id="search" type="text" class="form-control form-control-sm mt-3" placeholder="검색">
       </div>
 
       <div class="row mt-3">
@@ -94,7 +67,50 @@
     </div>
 
     <!-- Optional JavaScript -->
-
+    <script>
+      $('#analysis').click(function(){
+        if(1){
+          $.ajax({
+            type:'post',
+            contentType: 'application/x-www-form-urlencoded;charset=euc-kr',
+            dataType:'json',
+            data:{
+              crawling: $('#crawling').val(),
+              copyright: $('#copyright').val(),
+              search: $('#search').val()
+            },
+            url:'/getJson',
+          }).done(function(res){
+            var html = '<table class="table table-striped text-center" style="overflow:auto">';
+            html += '<tr>';
+            var flag = 0;
+            $.each(res[0], function(index, value){
+                html += '<th>'+index+'</th>';
+            });
+            html += '</tr>';
+            $.each(res, function(index, value){
+                html += '<tr>';
+                $.each(value, function(index2, value2){
+                    html += '<td>'+value2+'</td>';
+                });
+                html += '<tr>';
+            });
+            html += '</table>';
+            $('#show').html(html);
+          });
+        }
+      });
+    </script>
+    <script>
+      $(document).ready(function(){
+        $("#search").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#show table tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
