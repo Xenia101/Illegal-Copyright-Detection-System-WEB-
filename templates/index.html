@@ -62,7 +62,12 @@
       </div>
 
       <div class="row mt-3">
-        <div id="show"></div>
+        {% if tables %}
+          {% for table in tables %}
+              {{titles[loop.index]}}
+              {{ table|safe }}
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
 
