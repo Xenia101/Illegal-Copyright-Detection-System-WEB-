@@ -8,6 +8,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
     
     <title>Sample</title>
+    <style>
+      table {
+        border: 0!important;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+      }
+      th{
+        text-align: center;
+      }
+      table th,
+      table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #eceeef;
+      }
+
+      table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #eceeef;
+      }
+
+      table tbody + tbody {
+        border-top: 2px solid #eceeef;
+      }
+
+      table table {
+        background-color: #fff;
+      }
+
+      td{
+        text-overflow:ellipsis; 
+        overflow:hidden; 
+        white-space:nowrap;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -61,10 +97,9 @@
         <input id="search" type="text" class="form-control form-control-sm mt-3" placeholder="검색">
       </div>
 
-      <div class="row mt-3">
+      <div class="row mt-3 text-center">
         {% if tables %}
           {% for table in tables %}
-              {{titles[loop.index]}}
               {{ table|safe }}
           {% endfor %}
         {% endif %}
