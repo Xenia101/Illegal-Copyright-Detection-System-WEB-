@@ -27,7 +27,7 @@ def GetData():
 
 def RenderCSV(means):
     where = './static/input/' + means + '/result.csv'
-    data = pd.read_csv(where, encoding= 'euc-kr', error_bad_lines=False)
+    data = pd.read_csv(where, encoding='euc-kr')
     print(data)
     return data
 
