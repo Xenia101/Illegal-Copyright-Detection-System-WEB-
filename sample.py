@@ -12,17 +12,24 @@ def home():
 def GetData():
     if request.method == 'POST':
         data = request.form
-        print(data)
-        df = RenderCSV()
-        
+
+        if int(data['means']) is 1:
+            df = RenderCSV('simhash')
+        elif int(data['means']) is 2:
+            df = RenderCSV('noise')
+        else:
+            flash('Bad', 'danger')
+            return redirect(url_for('home'))
         flash('Good', 'success')
         return render_template("index.html", tables=[df.to_html(classes='data')], titles=df.columns.values)
     
     return render_template("index.html")
 
-def RenderCSV():
-    df = pd.read_csv('./static/output/output.csv', encoding= 'euc-kr')
-    return df
+def RenderCSV(means):
+    where = './static/input/' + means + '/result.csv'
+    data = pd.read_csv(where, encoding= 'euc-kr', error_bad_lines=False)
+    print(data)
+    return data
 
 if __name__ == "__main__":              
     app.run(host="localhost", port=5000, use_reloader=False, debug=True)

@@ -85,13 +85,13 @@
 
         <div class="col">
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="customFile">
+            <input type="file" class="custom-file-input" id="customFile" disabled>
             <label class="custom-file-label" for="customFile">Choose file...</label>
           </div>
         </div>
 
         <div class="col">
-          <input name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색">
+          <input name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색" disabled>
         </div>
 
         <div class="col">
@@ -103,7 +103,7 @@
         <input id="search" type="text" class="form-control form-control-sm" placeholder="검색">
       </div>
 
-      <div id="DataTable" class="row mt-3 text-center mb-5">
+      <div id="DataTable" class="row mt-3 text-center mb-5" style="height: 500px;">
         {% if tables %}
           {% for table in tables %}
               {{ table|safe }}
@@ -121,29 +121,10 @@
             contentType: 'application/x-www-form-urlencoded;charset=euc-kr',
             dataType:'json',
             data:{
-              crawling: $('#crawling').val(),
-              copyright: $('#copyright').val(),
-              search: $('#search').val()
+              means: $('#means').val(),
             },
             url:'/getJson',
-          }).done(function(res){
-            var html = '<table class="table table-striped text-center" style="overflow:auto">';
-            html += '<tr>';
-            var flag = 0;
-            $.each(res[0], function(index, value){
-                html += '<th>'+index+'</th>';
-            });
-            html += '</tr>';
-            $.each(res, function(index, value){
-                html += '<tr>';
-                $.each(value, function(index2, value2){
-                    html += '<td>'+value2+'</td>';
-                });
-                html += '<tr>';
-            });
-            html += '</table>';
-            $('#show').html(html);
-          });
+          })
         }
       });
     </script>
