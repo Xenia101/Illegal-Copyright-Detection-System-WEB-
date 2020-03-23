@@ -10,10 +10,12 @@
     <title>Sample</title>
     <style>
       table {
+        font-size: 9px;
         border: 0!important;
         width: 100%;
         max-width: 100%;
         margin-bottom: 1rem;
+        table-layout: fixed;
       }
       th{
         background-color: gainsboro;
@@ -36,19 +38,15 @@
         background-color: #fff;
       }
       td{
-        text-overflow:ellipsis; 
-        overflow:hidden; 
+        width: 50%;
         white-space:nowrap;
-      }
-      #DataTable{
-        overflow-y: scroll;
-        overflow-x: scroll;
+        overflow:hidden;
+        text-overflow:ellipsis;
       }
       table tbody tr:hover td, table tbody tr:hover th {
         background-color: #eeeeea;
         cursor: pointer;
       }
-
     </style>
   </head>
   <body>
@@ -66,32 +64,48 @@
       {% endwith %}
 
       <div class="row mt-3">
-        <h1 class="display-4">불법 저작물 탐지 시스템</h1>
+        <h1 class="h1">불법 저작물 탐지 시스템</h1>
       </div><hr>
-
-      <div class="row mt-3">
-        <div class="col text-center">
-          <button type="button" class="btn btn-outline-primary btn-lg">Crawling</button>
-        </div>
-      </div>
+      
       <form class="form-row mt-3" action="/GetData" method="POST">
         <div class="col">
-          <select name="means" class="form-control" required>
-            <option selected disabled value="">분석방법</option>
-            <option value="1">게시글 기반 검색(simhash)</option>
-            <option value="2">키워드 기반 검색(noise)</option>
+          <select id="means" name="means" class="form-control" required>
+            <option selected value="1">키워드 기반 검색</option>
+            <option value="2">게시글 기반 검색(simhash, noise삭제)</option>
           </select>
+        </div>
+
+        <div class="col">
+          <select id="methods" name="methods" class="form-control" required>
+            <option value="" selected disabled>분석대상</option>
+            <option value="1">직접입력</option>
+            <option value="2">파일입력</option>
+          </select>
+          <script type="text/javaScript">
+            $(function(){
+              $('#methods').change(function(){
+                if (this.value == 1) {
+                  $("#customFile").attr("disabled",true).attr("readonly",false);
+                  $("#keyword").attr("disabled",false).attr("readonly",false);
+                }
+                else if(this.value == 2){
+                  $("#customFile").attr("disabled",false).attr("readonly",false);
+                  $("#keyword").attr("disabled",true).attr("readonly",false);
+                }
+              })
+            })
+          </script>
         </div>
 
         <div class="col">
           <div class="custom-file">
             <input type="file" class="custom-file-input" id="customFile" disabled>
-            <label class="custom-file-label" for="customFile">Choose file...</label>
+            <label class="custom-file-label" for="customFile">파일선택</label>
           </div>
         </div>
 
         <div class="col">
-          <input name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색" disabled>
+          <input id="keyword" name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색" disabled>
         </div>
 
         <div class="col">
@@ -102,14 +116,14 @@
       <div class="row mt-4">
         <input id="search" type="text" class="form-control form-control-sm" placeholder="검색">
       </div>
+    </div>
 
-      <div id="DataTable" class="row mt-3 text-center mb-5" style="height: 500px;">
-        {% if tables %}
-          {% for table in tables %}
-              {{ table|safe }}
-          {% endfor %}
-        {% endif %}
-      </div>
+    <div id="DataTable" class="row mt-3 mb-5 pr-5 pl-5" style="height: 500px;">
+      {% if tables %}
+        {% for table in tables %}
+            {{ table|safe }}
+        {% endfor %}
+      {% endif %}
     </div>
 
     <!-- Optional JavaScript -->

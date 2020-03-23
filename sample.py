@@ -12,7 +12,7 @@ def home():
 def GetData():
     if request.method == 'POST':
         data = request.form
-
+        
         if int(data['means']) is 1:
             df = RenderCSV('simhash')
         elif int(data['means']) is 2:
@@ -28,7 +28,8 @@ def GetData():
 def RenderCSV(means):
     where = './static/input/' + means + '/result.csv'
     data = pd.read_csv(where, encoding='euc-kr')
-    print(data)
+    data.index += 1
+    data.columns.names = ['번호']
     return data
 
 if __name__ == "__main__":              
