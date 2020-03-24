@@ -24,10 +24,10 @@ def GetData():
             return redirect(url_for('home'))
 
         try:
-            df['URL'] = df['URL'].apply(lambda x: '<a href="{0}" target="_blank">{0}</a>'.format(x,x))
+            df['URL'] = df['URL'].apply(lambda x: '<a href="{0}" target="_blank">{1}</a>'.format(x,x))
         except:
             pass
-
+        pd.set_option('display.max_colwidth', -1)
         return render_template("index.html", tables=[df.to_html(classes='data',escape=False)], titles=df.columns.values, means=means, enable=1)
     
     return render_template("index.html")
