@@ -18,9 +18,8 @@ def GetData():
         elif int(data['means']) is 2:
             df = RenderCSV('noise')
         else:
-            flash('Bad', 'danger')
             return redirect(url_for('home'))
-        flash('Good', 'success')
+
         return render_template("index.html", tables=[df.to_html(classes='data')], titles=df.columns.values)
     
     return render_template("index.html")
