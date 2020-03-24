@@ -56,18 +56,27 @@
       #keyword{
         width: 400px;
       }
+      #DataTable table tr > *:nth-child(3):not(th) {
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+        width: 100%;
+      }
+      #DataTable table tr > *:nth-child(6):not(th){
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <!-- Content here -->
       <div class="row mt-3">
-        <h1 class="h1">불법 저작물 탐지 시스템</h1>
+        <h1 class="h1" style="font-size: 1.6rem;">불법 저작물 탐지 시스템</h1>
       </div><hr>
       
       <form class="form-row mt-3" action="/GetData" method="POST">
         <div class="row">
-          <h5>분석정책</h5>
+          <h5 style="font-size: 0.83rem;">분석정책</h5>
           <div class="col">
             <select id="means" name="means" class="form-control" required>
               {% if means == 1 %}
@@ -105,7 +114,7 @@
         </div>
 
         <div class="row mt-1">
-          <h5>분석대상</h5>
+          <h5 style="font-size: 0.83rem;">분석대상</h5>
           <div class="col">
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="customFile" disabled>
@@ -139,7 +148,10 @@
                   tableData.push(rowData.join(","));
                 });
                 data += tableData.join("\n");
-                $(document.body).append('<a id="download-link" download="data.csv" href=' + URL.createObjectURL(new Blob(["\ufeff", data], {
+                var d = new Date();
+                
+                var currentDate = d.getFullYear()+""+(d.getMonth() + 1)+""+d.getDate()+"-"+d.getHours()+d.getMinutes();
+                $(document.body).append('<a id="download-link" download="'+currentDate+'.csv" href=' + URL.createObjectURL(new Blob(["\ufeff", data], {
                   encoding:"EUC-KR",
                   type: "text/csv;charset=EUC-KR;"
                 })) + '/>');
@@ -167,6 +179,9 @@
     </div>
 
     <!-- Optional JavaScript -->
+    <script src="{{url_for('static', filename='js/colResizable-1.6.min.js')}}"></script>
+
+    <!--
     <script>
       $('#analysis').click(function(){
         if(1){
@@ -180,6 +195,11 @@
             url:'/getJson',
           })
         }
+      });
+    </script>-->
+    <script>
+      $(document).ready(function(){
+        $("#DataTable table").colResizable({liveDrag:true});
       });
     </script>
     <script>

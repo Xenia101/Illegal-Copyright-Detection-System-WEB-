@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
+from IPython.display import HTML
 import pandas as pd
+import re
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -21,7 +23,12 @@ def GetData():
         else:
             return redirect(url_for('home'))
 
-        return render_template("index.html", tables=[df.to_html(classes='data')], titles=df.columns.values, means=means, enable=1)
+        try:
+            df['URL'] = df['URL'].apply(lambda x: '<a href="{0}" target="_blank">{0}</a>'.format(x,x))
+        except:
+            pass
+
+        return render_template("index.html", tables=[df.to_html(classes='data',escape=False)], titles=df.columns.values, means=means, enable=1)
     
     return render_template("index.html")
 
