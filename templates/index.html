@@ -73,8 +73,7 @@
           </div>
           <div class="col">
             <select id="methods" name="methods" class="form-control" required>
-              <option value="" selected disabled>분석대상</option>
-              <option value="1">직접입력</option>
+              <option selected value="1">직접입력</option>
               <option value="2">파일입력</option>
             </select>
             <script type="text/javaScript">
@@ -110,12 +109,38 @@
           <div class="col">
             <button id="analysis" type="submit" class="btn btn-outline-primary">분석</button>  
           </div>
+          <button id="save" type="button" class="btn btn-outline-primary">저장</button>
+          <script>
+            $(function() {
+              $("#save").on('click', function() {
+                var data = "";
+                var tableData = [];
+                var rows = $("table tr");
+                rows.each(function(index, row) {
+                  var rowData = [];
+                  $(row).find("th, td").each(function(index, column) {
+                    rowData.push(column.innerText);
+                  });
+                  tableData.push(rowData.join(","));
+                });
+                data += tableData.join("\n");
+                $(document.body).append('<a id="download-link" download="data.csv" href=' + URL.createObjectURL(new Blob(["\ufeff", data], {
+                  encoding:"EUC-KR",
+                  type: "text/csv;charset=EUC-KR;"
+                })) + '/>');
+
+
+                $('#download-link')[0].click();
+                $('#download-link').remove();
+              });
+            });
+          </script> 
         </div>
       </form>
 
-      <div class="row mt-4">
+      <!--<div class="row mt-4">
         <input id="search" type="text" class="form-control form-control-sm" placeholder="검색">
-      </div>
+      </div>-->
     </div>
 
     <div id="DataTable" class="row mt-3 mb-5 pr-5 pl-5" style="height: 500px;">
