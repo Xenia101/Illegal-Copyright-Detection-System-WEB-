@@ -12,15 +12,16 @@ def home():
 def GetData():
     if request.method == 'POST':
         data = request.form
-        
         if int(data['means']) is 1:
             df = RenderCSV('simhash')
+            means = 1
         elif int(data['means']) is 2:
             df = RenderCSV('noise')
+            means = 2
         else:
             return redirect(url_for('home'))
 
-        return render_template("index.html", tables=[df.to_html(classes='data')], titles=df.columns.values)
+        return render_template("index.html", tables=[df.to_html(classes='data')], titles=df.columns.values, means=means, enable=1)
     
     return render_template("index.html")
 

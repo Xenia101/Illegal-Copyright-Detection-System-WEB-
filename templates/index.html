@@ -50,6 +50,9 @@
       #customFile{
         width: 214px;
       }
+      #means{
+        width: 214px;
+      }
       #keyword{
         width: 400px;
       }
@@ -67,8 +70,16 @@
           <h5>분석정책</h5>
           <div class="col">
             <select id="means" name="means" class="form-control" required>
+              {% if means == 1 %}
               <option selected value="1">키워드 기반 검색</option>
-              <option value="2">게시글 기반 검색(simhash, noise삭제)</option>
+              <option value="2">게시글 기반 검색</option>
+              {% elif means == 2 %}
+              <option value="1">키워드 기반 검색</option>
+              <option selected value="2">게시글 기반 검색</option>
+              {% else %}
+              <option selected value="1">키워드 기반 검색</option>
+              <option value="2">게시글 기반 검색</option>
+              {% endif %}
             </select>
           </div>
           <div class="col">
@@ -103,13 +114,17 @@
           </div>
 
           <div class="col">
-            <input id="keyword" name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색" disabled>
+            <input id="keyword" name="keyword" type="text" class="form-control" placeholder="관련 키워드 검색">
           </div>
 
           <div class="col">
             <button id="analysis" type="submit" class="btn btn-outline-primary">분석</button>  
           </div>
+          {% if enable == 1 %}
           <button id="save" type="button" class="btn btn-outline-primary">저장</button>
+          {% else %}
+          <button id="save" type="button" class="btn btn-outline-primary" disabled>저장</button>
+          {% endif %}
           <script>
             $(function() {
               $("#save").on('click', function() {
