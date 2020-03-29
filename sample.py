@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from IPython.display import HTML
 import pandas as pd
 import re
+import os
 import numpy as np
 import csv
 import datetime
@@ -13,6 +14,13 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 choseong=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ']
+UPLOAD_FOLDER = 'file'
+ALLOWED_EXTENSIONS = {'csv', 'txt', 'jpg'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def home():
@@ -32,19 +40,47 @@ def GetData():
     if request.method == 'POST':
         data = request.form
         print(data)
-        if int(data['means']) is 1: # 키워드
-            noise_processing(data['keyword'])
-            df = RenderCSV('keyword')
-            means = 1
-            #
-        elif int(data['means']) is 2: # 게시글
-            simhash(data['keyword'])
-            df = RenderCSV('simhash')
-            means = 2
-            #
-        else:
-            return redirect(url_for('home'))
+        if int(data['methods']) is 1: # 직접입력
+            if int(data['means']) is 1: # 키워드
+                noise_processing(data['keyword'])
+                df = RenderCSV('keyword')
+                means = 1
+                
+            elif int(data['means']) is 2: # 게시글
+                simhash(data['keyword'])
+                df = RenderCSV('simhash')
+                means = 2
+        elif int(data['methods']) is 2: # 파일입력
+            if int(data['means']) is 1: # 키워드
+                #
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(path)
 
+                    with open(path, 'r', encoding='UTF8') as f:
+                        list_file = []
+                        for line in f:
+                            list_file.append(line.replace('\n',''))
+                    noise_processing(list_file)
+                    df = RenderCSV('keyword')
+                means = 1
+            elif int(data['means']) is 2: # 게시글
+                #
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(path)
+
+                    with open(path, 'r', encoding='UTF8') as f:
+                        list_file = []
+                        for line in f:
+                            list_file.append(line.replace('\n',''))
+                    simhash(list_file)
+                    df = RenderCSV('simhash')
+                means = 2
         try:
             df['URL'] = df['URL'].apply(lambda x: '<a href="{0}" target="_blank">{1}</a>'.format(x,x))
         except:
