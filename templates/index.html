@@ -83,7 +83,7 @@
         <h1 class="h1" style="font-size: 1.6rem;">불법 저작물 탐지 시스템</h1>
       </div><hr>
 
-      <form class="form-row mt-3" action="/GetData" method="POST">
+      <form class="form-row mt-3" action="/GetData" method="POST" enctype="multipart/form-data">
         <div class="row">
           <h5 style="font-size: 0.83rem;">분석정책</h5>
           <div class="col">
@@ -126,8 +126,14 @@
           <h5 style="font-size: 0.83rem;">분석대상</h5>
           <div class="col">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="customFile" disabled>
+              <input name="file" type="file" class="custom-file-input" id="customFile" disabled>
               <label class="custom-file-label" for="customFile">파일선택</label>
+	      <script type="application/javascript">
+                $('input[type="file"]').change(function(e){
+                    var fileName = e.target.files[0].name;
+                    $('.custom-file-label').html(fileName);
+                });
+              </script>
             </div>
           </div>
 
