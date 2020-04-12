@@ -10,7 +10,7 @@ Illegal Copyright Detection System WEB
   <img src="https://github.com/Xenia101/Illegal-Copyright-Detection-System-WEB-/blob/master/img/img.PNG?raw=true">
 </p>
 
-- **Enter a "기생충" in the text box**
+- Enter a *"기생충"* in the text box
 
 <p align=center>
   <img src="https://github.com/Xenia101/Illegal-Copyright-Detection-System-WEB-/blob/master/img/img.PNG?raw=true">
